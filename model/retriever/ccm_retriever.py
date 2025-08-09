@@ -5,17 +5,12 @@ from langchain.retrievers.contextual_compression import ContextualCompressionRet
 from langchain.retrievers.document_compressors import LLMChainExtractor
 from ..utils.get_vector_store import get_store
 
-load_dotenv()
-key=os.getenv("GEMINI_API_KEY_2")
-
-
-
-llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash",temperature=0.1,google_api_key=key)
-compressor=LLMChainExtractor.from_llm(llm)
-
-
 def ccm_retriever(subject,year,sem):
 
+    key=os.getenv("GEMINI_API_KEY_2")
+    llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash",temperature=0.1,google_api_key=key)
+    
+    compressor=LLMChainExtractor.from_llm(llm)
     vector_store=get_store(subject,year,sem)
     base_retriever=vector_store.as_retriever(search_kwargs={"k":5})
 
