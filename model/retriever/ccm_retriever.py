@@ -14,7 +14,7 @@ llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash",temperature=0.1,google_api
 compressor=LLMChainExtractor.from_llm(llm)
 
 
-def ccm_query(subject,year,sem):
+def ccm_retriever(subject,year,sem):
 
     vector_store=get_store(subject,year,sem)
     base_retriever=vector_store.as_retriever(search_kwargs={"k":5})

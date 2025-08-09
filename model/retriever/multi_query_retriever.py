@@ -20,9 +20,9 @@ def multi_query(subject,year,sem):
 
     return mq_retriever
 
-mq=multi_query("Analog_CMOS",3,1)
-res=mq.invoke("How we can use CMOS as an amplifier?")
-print(res)
+# mq=multi_query("Analog_CMOS",3,1)
+# res=mq.invoke("How we can use CMOS as an amplifier?")
+# print(res)
 
     
 
