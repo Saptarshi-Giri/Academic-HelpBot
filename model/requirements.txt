@@ -1,4 +1,4 @@
-python
+python-3.11.8
 
 pandas
 google-generativeai
