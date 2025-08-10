@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv
+from langchain_openai import ChatOpenAI
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.retrievers.contextual_compression import ContextualCompressionRetriever
 from langchain.retrievers.document_compressors import LLMChainExtractor
@@ -7,10 +8,16 @@ from ..utils.get_vector_store import get_store
 import logging
 
 def ccm_retriever(subject,year,sem):
-
+    load_dotenv()
     key=os.getenv("GEMINI_API_KEY_2")
     print(key)
-    llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash",temperature=0.1,google_api_key=key)
+    
+    llm = ChatOpenAI(
+    model="gpt-4o-mini",
+    temperature=0.5,
+    max_tokens=600,
+    openai_api_key=os.getenv("OPENAI_API_KEY")
+    )
     
     compressor=LLMChainExtractor.from_llm(llm)
     vector_store=get_store(subject,year,sem)

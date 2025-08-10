@@ -1,5 +1,5 @@
 "use client";
-
+import axios from "axios";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { CloudCog, GraduationCap } from "lucide-react";
@@ -50,20 +50,11 @@ export default function Home() {
     setIsLoading(true);
 
     try {
-      const res = await fetch("https://academic-q-a-bot.onrender.com/ask", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          question: content,
-        }),
+      const res = await axios.post("http://127.0.0.1:8000/ask", {
+        question: content,
       });
-
-      if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-
-      const data = await res.json();
-      console.log(data);
+      
+      const data = res.data;
 
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -87,7 +78,7 @@ export default function Home() {
     } finally {
       setIsLoading(false);
     }
-  };
+
 
   // Handle clearing chat
   const handleClearChat = () => setMessages([]);

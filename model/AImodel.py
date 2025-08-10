@@ -1,5 +1,6 @@
 import os
 import logging 
+from langchain_openai import ChatOpenAI
 from model.misc.extract_data import extract_page_contents
 from model.prompt.prompt_input import User_Prompt
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -16,10 +17,15 @@ def build_chain():
             "❌ GEMINI_API_KEY_2 not found. Please set it in your .env file."
         )
 
-    llm = ChatGoogleGenerativeAI(
-        model="gemini-2.5-flash",
-        temperature=0.1,
-        google_api_key=key
+    # llm = ChatGoogleGenerativeAI(
+    #     model="gemini-2.5-flash",
+    #     temperature=0.1,
+    #     google_api_key=key
+    # )
+    llm = ChatOpenAI(
+    model="gpt-4o-mini",
+    temperature=0.5,
+    max_tokens=600,
     )
 
     CCM_Retriever = ccm_retriever("Analog_CMOS", 3, 1)
