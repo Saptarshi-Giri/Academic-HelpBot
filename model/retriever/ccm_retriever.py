@@ -4,10 +4,12 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.retrievers.contextual_compression import ContextualCompressionRetriever
 from langchain.retrievers.document_compressors import LLMChainExtractor
 from ..utils.get_vector_store import get_store
+import logging
 
 def ccm_retriever(subject,year,sem):
 
     key=os.getenv("GEMINI_API_KEY_2")
+    print(key)
     llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash",temperature=0.1,google_api_key=key)
     
     compressor=LLMChainExtractor.from_llm(llm)
@@ -18,6 +20,7 @@ def ccm_retriever(subject,year,sem):
         base_retriever=base_retriever,
         base_compressor=compressor
     )
+    print(f"CCM retriever created with key {key}")
 
     return ccm_retriever
 

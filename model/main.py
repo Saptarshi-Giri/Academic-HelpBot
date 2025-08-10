@@ -1,6 +1,7 @@
 import os
+import logging
 from fastapi.middleware.cors import CORSMiddleware
-
+from fastapi import HTTPException
 from pathlib import Path
 from dotenv import load_dotenv
 env_path = Path(__file__).parent / ".env"
@@ -36,11 +37,13 @@ async def health_check():
 @app.post("/ask")
 async def ask_question(request: QueryRequest):
     try:
+        print("Started .........")
         chain = build_chain()
         answer = chain.invoke(request.question)
         return {"question": request.question, "answer": answer}
     except Exception as e:
-        return {"error": str(e)}, 500
+        raise HTTPException(status_code=500, detail=str(e))
+
     
 
 @app.post("/test")
