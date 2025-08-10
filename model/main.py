@@ -29,6 +29,10 @@ app.add_middleware(
 class QueryRequest(BaseModel):
     question: str
 
+@app.get("/")
+def health_check():
+    return {"status": "running"}
+
 @app.post("/ask")
 async def ask_question(request: QueryRequest):
     chain = build_chain()  # ✅ Build chain on demand (fresh key + retriever)
