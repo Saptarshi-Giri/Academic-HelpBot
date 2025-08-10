@@ -53,7 +53,7 @@ export default function Home() {
       const res = await axios.post("http://127.0.0.1:8000/ask", {
         question: content,
       });
-      
+
       const data = res.data;
 
       const aiMessage: Message = {
@@ -157,4 +157,5 @@ export default function Home() {
       </div>
     </div>
   );
+}
 }
