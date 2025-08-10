@@ -17,8 +17,7 @@ def build_chain():
     llm = ChatGoogleGenerativeAI(
         model="gemini-2.5-flash",
         temperature=0.1,
-        google_api_key=key,
-        max_tokens=2000
+        google_api_key=key
     )
 
     CCM_Retriever = ccm_retriever("Analog_CMOS", 3, 1)
