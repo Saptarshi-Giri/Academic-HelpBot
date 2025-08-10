@@ -30,11 +30,19 @@ class QueryRequest(BaseModel):
     question: str
 
 @app.get("/")
-def health_check():
+async def health_check():
     return {"status": "running"}
 
 @app.post("/ask")
 async def ask_question(request: QueryRequest):
-    chain = build_chain()  # ✅ Build chain on demand (fresh key + retriever)
-    answer = chain.invoke(request.question)
-    return {"question": request.question, "answer": answer}
+    try:
+        chain = build_chain()
+        answer = chain.invoke(request.question)
+        return {"question": request.question, "answer": answer}
+    except Exception as e:
+        return {"error": str(e)}, 500
+    
+
+@app.post("/test")
+async def ask_question(request: QueryRequest):
+    return {"question": request.question}
