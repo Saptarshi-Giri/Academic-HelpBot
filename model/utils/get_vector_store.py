@@ -1,21 +1,41 @@
 import os
-from langchain_huggingface import HuggingFaceEmbeddings
+from fastapi import HTTPException
 from langchain_community.vectorstores import FAISS
+from langchain_community.embeddings import HuggingFaceEmbeddings
 
-def get_store(subject,year,sem):
-    
-    base_dir = os.path.dirname(os.path.dirname(__file__))  # model/
-    # project_root = os.path.dirname(base_dir)  # Bot-1.2/
+def get_store(subject: str, year: str, sem: str):
     persist_path = os.path.join("model", "Vector_Store", f"{subject}_{year}_{sem}")
-    print(persist_path)
-    embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
-    vectorstore = FAISS.load_local(
-        persist_path,
-        embeddings,
-        allow_dangerous_deserialization=True
-    )
+    abs_path = os.path.abspath(persist_path)
+
+    # Check folder
+    if not os.path.isdir(persist_path):
+        raise HTTPException(
+            status_code=400,
+            detail=f"Vector store directory not found: {persist_path}"
+        )
+
+    # Check essential FAISS files (adjust filenames if yours differ)
+    required_files = ["index.faiss", "index.pkl"]
+    for file in required_files:
+        file_path = os.path.join(persist_path, file)
+        if not os.path.isfile(file_path):
+            raise HTTPException(
+                status_code=400,
+                detail=f"Missing required vector store file: {file_path}"
+            )
+
+    # Load embeddings & FAISS store
+    try:
+        embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+        vectorstore = FAISS.load_local(
+            persist_path,
+            embeddings,
+            allow_dangerous_deserialization=True
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error loading FAISS vector store: {str(e)}"
+        )
+
     return vectorstore
-
-# base_dir = os.path.dirname(os.path.dirname(__file__))  # model/
-# project_root = os.path.dirname(base_dir)  # Bot-1.2/
-
