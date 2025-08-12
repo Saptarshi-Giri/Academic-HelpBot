@@ -7,7 +7,7 @@ from langchain.retrievers.document_compressors import LLMChainExtractor
 from ..utils.get_vector_store import get_store
 import logging
 
-def ccm_retriever(subject,year,sem):
+def ccm_retri(subject,year,sem):
     load_dotenv()
     key=os.getenv("GEMINI_API_KEY_2")
     print(key)

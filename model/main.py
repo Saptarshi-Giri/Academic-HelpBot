@@ -11,7 +11,9 @@ load_dotenv(dotenv_path=env_path)
 from fastapi import FastAPI
 from pydantic import BaseModel
 from model.AImodel import build_chain  # Import the builder, not the chain itself
-
+from model.retriever.ccm_retriever import ccm_retri
+from model.misc.extract_data import extract_page_contents
+from model.AImodel import get_answer
 
 origins = [
     "http://localhost:3000",  # React dev server
@@ -36,6 +38,12 @@ app.add_middleware(
 
 class QueryRequest(BaseModel):
     question: str
+
+class QueryRequest1(BaseModel):
+    subject: str
+    year: str
+    sem: str
+    question: str    
 
 @app.get("/")
 async def health_check():
@@ -65,3 +73,26 @@ async def ask_question(request: QueryRequest):
     print("Started")
     answer=llm.invoke(request.question)
     return {"question": request.question,"answer": answer}
+
+
+@app.post("/test2")
+async def ask_question(request: QueryRequest):
+    print("Running test2........")
+    ccm_ret=ccm_retri("Analog_CMOS", 3, 1)
+    print(ccm_retri)
+    response=ccm_ret.invoke(request.question)
+    return {"question": request.question,"answer": response}
+
+@app.post("/test3")
+async def ask_question(request: QueryRequest):
+    print("Running test3........")
+    ccm_ret=ccm_retri("Analog_CMOS", 3, 1)
+    inputs={"query":request.question , "retriever":ccm_ret}
+    response=extract_page_contents(inputs)
+    return {"question": request.question,"answer": response}
+
+@app.post("/test4")
+async def ask_question1(request: QueryRequest1):
+    print("Running test4........")
+    response=get_answer(request.subject,request.year,request.sem,request.question)
+    return {"question": request.question,"answer": response}
