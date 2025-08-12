@@ -4,7 +4,7 @@ from langchain_openai import ChatOpenAI
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.retrievers.contextual_compression import ContextualCompressionRetriever
 from langchain.retrievers.document_compressors import LLMChainExtractor
-from ..utils.get_vector_store import get_store
+from model.utils.get_vector_store import get_store
 import logging
 
 def ccm_retri(subject,year,sem):
