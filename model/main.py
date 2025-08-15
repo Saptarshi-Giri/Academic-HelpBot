@@ -4,11 +4,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi import HTTPException
 from pathlib import Path
 from langchain_openai import ChatOpenAI
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from dotenv import load_dotenv
 env_path = Path(__file__).parent / ".env"
 load_dotenv(dotenv_path=env_path) 
-
 from fastapi import FastAPI
 from pydantic import BaseModel
 # from model.AImodel import build_chain  # Import the builder, not the chain itself
@@ -27,7 +26,7 @@ llm = ChatOpenAI(
     max_tokens=600,
     )
 
-embed_llm=HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+embed_llm=HuggingFaceEmbeddings(model_name="sentence-transformers/paraphrase-MiniLM-L3-v2")
 
 app = FastAPI(title="LangChain API", version="1.0")
 app.add_middleware(

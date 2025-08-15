@@ -54,13 +54,6 @@ def load_documents(year, semester, subject):
                 else:
                     documents.extend(docs)
 
-                # # ✅ Extract and store images in MongoDB
-                # extract_and_store_images(
-                #     pdf_path=file_path,
-                #     subject=subject,
-                #     year=year,
-                #     semester=semester
-                # )
 
             elif filename.endswith(".txt"):
                 loader = TextLoader(file_path)
@@ -80,4 +73,6 @@ def load_documents(year, semester, subject):
     print(len(documents))
     print(documents[100])
     return documents
+
+load_documents(3,1,"Analog_CMOS")
 

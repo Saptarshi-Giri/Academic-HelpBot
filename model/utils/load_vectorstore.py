@@ -5,7 +5,6 @@ import os
 
 # List of all subjects in 3rd year, 1st semester
 subjects = [
-    
     "Analog_CMOS",
 ]
 
