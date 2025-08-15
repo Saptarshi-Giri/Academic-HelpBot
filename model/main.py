@@ -4,13 +4,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi import HTTPException
 from pathlib import Path
 from langchain_openai import ChatOpenAI
+from langchain_community.embeddings import HuggingFaceEmbeddings
 from dotenv import load_dotenv
 env_path = Path(__file__).parent / ".env"
 load_dotenv(dotenv_path=env_path) 
 
 from fastapi import FastAPI
 from pydantic import BaseModel
-from model.AImodel import build_chain  # Import the builder, not the chain itself
+# from model.AImodel import build_chain  # Import the builder, not the chain itself
 from model.retriever.ccm_retriever import ccm_retri
 from model.misc.extract_data import extract_page_contents
 from model.AImodel import get_answer
@@ -25,6 +26,8 @@ llm = ChatOpenAI(
     temperature=0.5,
     max_tokens=600,
     )
+
+embed_llm=HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 
 app = FastAPI(title="LangChain API", version="1.0")
 app.add_middleware(
@@ -49,15 +52,15 @@ class QueryRequest1(BaseModel):
 async def health_check():
     return {"status": "running"}
 
-@app.post("/ask")
-async def ask_question(request: QueryRequest):
-    try:
-        print("Started .........")
-        chain = build_chain()
-        answer = chain.invoke(request.question)
-        return {"question": request.question, "answer": answer}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+# @app.post("/ask")
+# async def ask_question(request: QueryRequest):
+#     try:
+#         print("Started .........")
+#         chain = build_chain()
+#         answer = chain.invoke(request.question)
+#         return {"question": request.question, "answer": answer}
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=str(e))
 
     
 
@@ -78,7 +81,7 @@ async def ask_question(request: QueryRequest):
 @app.post("/test2")
 async def ask_question(request: QueryRequest):
     print("Running test2........")
-    ccm_ret=ccm_retri("Analog_CMOS", 3, 1)
+    ccm_ret=ccm_retri("Analog_CMOS", 3, 1,llm,embed_llm)
     print(ccm_retri)
     response=ccm_ret.invoke(request.question)
     return {"question": request.question,"answer": response}
@@ -86,7 +89,7 @@ async def ask_question(request: QueryRequest):
 @app.post("/test3")
 async def ask_question(request: QueryRequest):
     print("Running test3........")
-    ccm_ret=ccm_retri("Analog_CMOS", 3, 1)
+    ccm_ret=ccm_retri("Analog_CMOS", 3, 1,llm,embed_llm)
     inputs={"query":request.question , "retriever":ccm_ret}
     response=extract_page_contents(inputs)
     return {"question": request.question,"answer": response}
@@ -94,5 +97,5 @@ async def ask_question(request: QueryRequest):
 @app.post("/test4")
 async def ask_question1(request: QueryRequest1):
     print("Running test4........")
-    response=get_answer(request.subject,request.year,request.sem,request.question)
+    response=get_answer(request.subject,request.year,request.sem,request.question,llm,embed_llm)
     return {"question": request.question,"answer": response}

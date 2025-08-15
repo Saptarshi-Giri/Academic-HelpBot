@@ -1,9 +1,8 @@
 import os
 from fastapi import HTTPException
 from langchain_community.vectorstores import FAISS
-from langchain_community.embeddings import HuggingFaceEmbeddings
 
-def get_store(subject: str, year: str, sem: str):
+def get_store(subject: str, year: str, sem: str,embed_llm):
     persist_path = os.path.join("model", "Vector_Store", f"{subject}_{year}_{sem}")
     abs_path = os.path.abspath(persist_path)
 
@@ -26,7 +25,7 @@ def get_store(subject: str, year: str, sem: str):
 
     # Load embeddings & FAISS store
     try:
-        embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+        embeddings = embed_llm
         vectorstore = FAISS.load_local(
             persist_path,
             embeddings,
