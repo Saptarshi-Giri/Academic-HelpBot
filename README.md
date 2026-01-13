@@ -1,6 +1,6 @@
-# ETCE AI TUTOR
+# CSE AI TUTOR
 
-## University Electronics AI Chatbot (RAG-powered)
+## AI Chatbot (RAG-powered)
 
 **ETCE AI TUTOR** is a full-stack **Retrieval-Augmented Generation (RAG)** chatbot designed for electronics and communication engineering students. It helps learners query concepts directly from curated textbooks and receive accurate, context-driven answers powered by **OpenAI LLMs** and FAISS-based retrieval.
 
